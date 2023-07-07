@@ -12,6 +12,7 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import PictureDeletePopup from "./PictureDeletePopup";
+import Login from "./Login";
 
 function App() {
   //определяем, открыт ли попап для редактирования профиля
