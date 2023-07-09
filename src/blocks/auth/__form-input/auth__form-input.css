@@ -9,6 +9,7 @@
   line-height: 17px;
   margin: 0;
   padding: 0 0 8px;
+  outline: none;
 }
 
 .auth__form-input:first-of-type {
@@ -24,3 +25,5 @@
     width: 260px;
   }
 }
+
+

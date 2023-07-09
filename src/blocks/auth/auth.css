@@ -6,11 +6,19 @@
   width: 100%;
   margin-top: 41px;
   align-items: center;
+
+  padding-bottom: 67px;
+
 }
 
 @media screen and (max-width: 768px) {
   .auth {
     max-width: 260px;
     margin-top: 20px;
+
+    padding-bottom: 47px;
   }
 }
+
+
+

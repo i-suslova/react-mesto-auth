@@ -8,28 +8,28 @@ class ApiAuth {
   _correctServerResponse(res) {
     return res.ok ? res.json() : Promise.reject(`Ошибка ${res.status}`);
   }
-
+  
   // запрос для регистрации
-  async signup({ password, email }) {
+  async signup({ email, password }) {
     const response = await fetch(`${this.baseUrl}/signup`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify({
-        password: password,
         email: email,
+        password: password,
       }),
     });
     return this._correctServerResponse(response);
   }
 
   //запрос для авторизации
-  async signin({ password, email }) {
+  async signin({ email, password }) {
     const response = await fetch(`${this.baseUrl}/signin`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify({
-        password: password,
         email: email,
+        password: password,
       }),
     });
     return this._correctServerResponse(response);
@@ -37,7 +37,7 @@ class ApiAuth {
 
   //запрос для проверки валидности токена и
   //получения email для вставки в шапку сайта
-  async tokenCheck(token) {
+  async getToken(token) {
     const response = await fetch(`${this.baseUrl}/users/me`, {
       headers: {
         ...this.headers,
@@ -48,11 +48,11 @@ class ApiAuth {
   }
 }
 
-export const apiAuth = new ApiAuth({
+const apiAuth = new ApiAuth({
   baseUrl: "https://auth.nomoreparties.co",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-
+export default apiAuth;

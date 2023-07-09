@@ -1,8 +1,11 @@
 import React from "react";
 import { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import ProtectedRoute from "./ProtectedRoute";
 
 import api from "../utils/api";
+import apiAuth from "../utils/apiAuth";
 
 import Header from "./Header";
 import Main from "./Main";
@@ -13,6 +16,8 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import PictureDeletePopup from "./PictureDeletePopup";
 import Login from "./Login";
+import Register from "./Register";
+import InfoTooltip from "./InfoTooltip";
 
 function App() {
   //определяем, открыт ли попап для редактирования профиля
@@ -24,18 +29,26 @@ function App() {
   //определяем, открыт ли попап для Подтверждения удаления карточки
   const [isPictureDeletePopupOpen, setIsPictureDeletePopupOpen] =
     useState(false);
+  //определяем, открыт ли попап для информации о регистрации
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   //сохраняем информации о карточке, которая должна быть удалена
   const [deletedCard, setDeletedCard] = useState(null);
   //сохраняем информацию о выбранной карточке
   const [selectedCard, setSelectedCard] = useState(null);
+  //сохраняем контент модального окна
+  const [isRegistration, setIsRegistration] = useState(null);
   //данные текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
   //сохраняем массив карточек
   const [cards, setCards] = useState([]);
-  //отслеживанияестатуса загрузки
+  //отслеживанияем статус загрузки
   const [isLoading, setIsLoading] = useState(false);
 
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
+
   React.useEffect(() => {
+    if (!loggedIn) return;
     const getAllData = async () => {
       try {
         const data = await api.getAllNeedData();
@@ -47,7 +60,53 @@ function App() {
     };
 
     getAllData();
+  }, [loggedIn]);
+
+  React.useEffect(() => {
+    const checkToken = async () => {
+      if (!localStorage.getItem("JWT")) return;
+
+      try {
+        const res = await apiAuth.getToken(localStorage.getItem("JWT"));
+        if (res.data) {
+          setEmail(res.data.email);
+          setLoggedIn(true);
+        }
+      } catch (err) {
+        setLoggedIn(false);
+        console.log(err);
+      }
+    };
+    checkToken();
   }, []);
+
+  const handleRegister = (email, password) => {
+    apiAuth
+      .signup({ email, password })
+      .then((result) => {
+        setEmail(result.data.email);
+        setIsRegistration(true);
+        setIsInfoTooltipOpen(true);
+        closeAllPopups();
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsRegistration(false);
+        setIsInfoTooltipOpen(true);
+      });
+  };
+
+  const handleLogin = (email, password) => {
+    apiAuth
+      .signin({ email, password })
+      .then((res) => {
+        localStorage.setItem("JWT", res.token);
+        setIsInfoTooltipOpen(true);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   //обработчики событий открытия попапов
   const handleEditProfileClick = () => {
@@ -72,6 +131,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsPictureDeletePopupOpen(false);
     setDeletedCard(false);
+    setIsInfoTooltipOpen(false);
     setSelectedCard(null);
   };
 
@@ -174,20 +234,59 @@ function App() {
       });
   }
 
+  //удаляем JWT токен из локального хранилища браузера
+  function handleSignOut() {
+    localStorage.removeItem("JWT");
+    setLoggedIn(false);
+  }
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
+          {/* //  <Header loggedIn={loggedIn} onSignOut={handleSignOut} /> */}
           <Header />
-          <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardDelete={handlePictureDeleteClick}
-            onCardLike={handleCardLike}
-          />
+          <Routes>
+            {/* Маршруты для регистрации и авторизации */}
+            <Route
+              path="/"
+              element={
+                loggedIn ? (
+                  <Navigate to="/sign-up" replace={true} />
+                ) : (
+                  <Navigate to="/sign-in" replace={true} />
+                )
+              }
+            />
+            <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
+            <Route
+              path="/sign-up"
+              element={<Register onRegister={handleRegister} />}
+            />
+            <Route
+              path="/"
+              element={
+                loggedIn ? (
+                  <ProtectedRoute
+                    element={Main}
+                    cards={cards}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    onCardClick={handleCardClick}
+                    onCardDelete={handlePictureDeleteClick}
+                    onCardLike={handleCardLike}
+                    loggedIn={loggedIn}
+                    email={email}
+                    onSignOut={handleSignOut}
+                  />
+                ) : (
+                  <Navigate to="/sign-in" replace={true} />
+                )
+              }
+            />
+          </Routes>
+
           <Footer />
 
           <EditProfilePopup
@@ -217,6 +316,11 @@ function App() {
             deletedCard={deletedCard}
             onCardDelete={handleCardDelete}
             isLoading={isLoading}
+          />
+          <InfoTooltip
+            isOpen={isInfoTooltipOpen}
+            onClose={closeAllPopups}
+            isRegistration={isRegistration}
           />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />

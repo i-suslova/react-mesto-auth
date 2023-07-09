@@ -1,66 +1,74 @@
-// Register.js
+import React from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import React, {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
 
-
-const Register = () => {
-  const [formValue, setFormValue] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    calGoal: ''
-  })
+function Register(props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  // обновляем состояние email и password, 
+  //и передаём их в props.onRegister при вызове
   const handleChange = (e) => {
-    const {name, value} = e.target;
+    const { id, value } = e.target;
+    if (id === "Email") {
+      setEmail(value);
+    } else if (id === "Password") {
+      setPassword(value);
+    }
+  };
 
-    setFormValue({
-      ...formValue,
-      [name]: value
-    });
-  }
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    // здесь обработчик регистрации
+
+    props.onRegister(email, password);
   }
+  
+  
+  React.useEffect(() => {
+    if (props.loggedIn) {
+      navigate("/");
+    }
+  }, [props.loggedIn, navigate]);
+
+
 
   return (
-    <div className="register">
-      <p className="register__welcome">
-        Пожалуйста, зарегистрируйтесь.
-      </p>
-      <form onSubmit={handleSubmit} className="register__form">
-        <label htmlFor="username">
-          Логин:
-        </label>
-        <input id="username" name="username" type="text" value={formValue.username} onChange={handleChange} />
-        <label htmlFor="email">
-          Email:
-        </label>
-        <input id="email" name="email" type="email" value={formValue.email} onChange={handleChange} />
-        <label htmlFor="password">
-          Пароль:
-        </label>
-        <input id="password" name="password" type="password" value={formValue.password} onChange={handleChange} />
-        <label htmlFor="confirmPassword">
-          Повторите пароль:
-        </label>
-        <input id="confirmPassword" name="confirmPassword" type="password" value={formValue.confirmPassword} onChange={handleChange} />
-        <label htmlFor="calGoal">
-          Калории за день:
-        </label>
-        <input id="calGoal" name="calGoal" type="number" value={formValue.calGoal} onChange={handleChange} />
-        <div className="register__button-container">
-          <button type="submit" onSubmit={handleSubmit} className="register__link">Зарегистрироваться</button>
-        </div>
+    <div className="auth auth__register">
+       <h2 className="auth__title">Регистрация</h2>
+    
+      <form className="form auth__form" onSubmit={handleSubmit}>
+        <input
+          className="auth__form-input"
+          type="email"
+          placeholder="Email"
+          id="Email"        
+          value={email || ""}
+          onChange={handleChange}
+          required
+        />
+        {/* //<span className="auth__form-error">{errors.email}</span> */}
+        <input
+          className="auth__form-input"
+          type="password"
+          minLength="3"
+          id="Password"
+          placeholder="Пароль"
+          value={password || ""}
+          onChange={handleChange}
+          required
+        />
+        {/* <span className="auth__form-error">{errors.password}</span> */}
+        <button className="auth__form-button" type="submit">
+          Зарегистрироваться
+        </button>
+
+         <Link to="/sign-up" className="auth__form-help hover">
+          Уже зарегистрированы? Войти
+        </Link>
+     
       </form>
-      <div className="register__signin">
-        <p>Уже зарегистрированы?</p>
-        <Link to="login" className="register__login-link">Войти</Link>
-      </div>
     </div>
   );
 }
