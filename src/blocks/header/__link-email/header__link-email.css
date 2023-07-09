@@ -1,0 +1,11 @@
+.header__link-emai {
+  display: block;
+  font-weight: 500;
+  padding: 0;
+  color: #fff;
+  font-size: 18px;
+  line-height: 22px;
+  font-style: normal;
+  text-decoration: none;
+  text-align: center;
+}

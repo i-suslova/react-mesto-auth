@@ -1,0 +1,13 @@
+.auth__form-error {
+  color: #ff0000;
+  display: block;
+  /* display: none; */
+  height: 12px;
+  font-size: 12px;
+  line-height: 14px;
+  margin: 0;
+  max-width: 358px;
+  min-height: 30px;
+  padding:  0;
+}
+
