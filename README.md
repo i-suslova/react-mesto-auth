@@ -1,70 +1,31 @@
-# Getting Started with Create React App
+# Проект: Mesto-React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+:star: проектная работа 11, где проект Mesto портируется на «Реакт»,
 
-## Available Scripts
+сделанная при прохождении обучения в [**_ЯндексПрактикум_**](https://practicum.yandex.ru/web/)
 
-In the project directory, you can run:
+.
 
-### `npm start`
+---
+:star: на данном этапе реализовано:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- На странице отрисовывается информация о пользователе и карточке.
+- Модальные окна открываются при нажатии на соответствующий элемент интерфейса.
+- Модальные окна закрываются при нажатии на иконку закрытия.
+- Есть возможность редактирования аватара и профиля.
+- В форму редактирования профиля подставляются текущие данные.
+- Есть возможность добавления новой карточки.
+- Реализовано добавление/удаление лайка.
+- Реализовано удаление собственной карточки.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+:star: В работе писпользовались:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- CRA
+- JS
+- JSX
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+:star: [![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=115CF7&center=%D0%BB%D0%BE%D0%B6%D1%8C&vCenter=%D0%BB%D0%BE%D0%B6%D1%8C&repeat=%D0%B2%D0%B5%D1%80%D0%BD%D0%BE&width=435&lines=%D0%A1%D0%A1%D0%AB%D0%9B%D0%9A%D0%90+%D0%9D%D0%90+%D0%A1%D0%90%D0%99%D0%A2)](https://i-suslova.github.io/mesto-react)
