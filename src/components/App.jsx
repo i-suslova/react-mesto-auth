@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -20,6 +20,9 @@ import Register from "./Register";
 import InfoTooltip from "./InfoTooltip";
 
 function App() {
+  const navigate = useNavigate();
+  //данные текущего пользователя
+  const [currentUser, setCurrentUser] = useState({});
   //определяем, открыт ли попап для редактирования профиля
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   //определяем, открыт ли попап для добавления нового места
@@ -31,21 +34,24 @@ function App() {
     useState(false);
   //определяем, открыт ли попап для информации о регистрации
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+
   //сохраняем информации о карточке, которая должна быть удалена
   const [deletedCard, setDeletedCard] = useState(null);
   //сохраняем информацию о выбранной карточке
   const [selectedCard, setSelectedCard] = useState(null);
-  //сохраняем контент модального окна
-  const [isRegistration, setIsRegistration] = useState(null);
-  //данные текущего пользователя
-  const [currentUser, setCurrentUser] = useState({});
   //сохраняем массив карточек
   const [cards, setCards] = useState([]);
+  //сохраняем электронную почту
+  const [email, setEmail] = useState("");
+
   //отслеживанияем статус загрузки
   const [isLoading, setIsLoading] = useState(false);
-
+  //отслеживанем успешное завершенияе регистрации
+  const [isRegistrationStatus, setIsRegistrationStatus] = useState(false);
+  //отслеживанем данные входа
+  const [isLoggedStatus, setIsLoggedStatus] = useState(false);
+  //
   const [loggedIn, setLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
 
   React.useEffect(() => {
     if (!loggedIn) return;
@@ -83,33 +89,31 @@ function App() {
   const handleRegister = (email, password) => {
     apiAuth
       .signup({ email, password })
-      .then((result) => {
-        setEmail(result.data.email);
-        setIsRegistration(true);
+      .then((res) => {
+        setEmail(res.data.email);
+        setIsRegistrationStatus(true);
         setIsInfoTooltipOpen(true);
-        closeAllPopups();
+        navigate("/sign-in");
       })
       .catch((error) => {
         console.error(error);
-        setIsRegistration(false);
+        setIsRegistrationStatus(false);
         setIsInfoTooltipOpen(true);
-        closeAllPopups();
       });
   };
-
-  console.log("isInfoTooltipOpen:", isInfoTooltipOpen);
-console.log("isRegistration:", isRegistration);
 
   const handleLogin = (email, password) => {
     apiAuth
       .signin({ email, password })
       .then((res) => {
         localStorage.setItem("JWT", res.token);
+        setIsLoggedStatus(true);
         setLoggedIn(true);
-        setIsInfoTooltipOpen(true);
+        navigate("/");
       })
       .catch((error) => {
         console.error(error);
+        setIsInfoTooltipOpen(true);
       });
   };
 
@@ -128,6 +132,10 @@ console.log("isRegistration:", isRegistration);
     setDeletedCard(card);
     setIsPictureDeletePopupOpen(true);
   };
+
+  // const handlInfoTooltipClick = () => {
+  //   setIsInfoTooltipOpen(true);
+  // };
 
   //обработчик закрытия всех попапов
   const closeAllPopups = () => {
@@ -244,32 +252,20 @@ console.log("isRegistration:", isRegistration);
     localStorage.removeItem("JWT");
     setLoggedIn(false);
     setEmail("");
-    
   }
 
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
-          {/* //  <Header loggedIn={loggedIn} onSignOut={handleSignOut} /> */}
-          
           <Header />
+
           <Routes>
-          
-            <Route
-              path="/sign-in"
-              element={
-                loggedIn ? (
-                  <Navigate to="/sign-up" replace={true} />
-                ) : (
-                  <Navigate to="/sign-in" replace={true} />
-                )
-              }
-            />
+          <Route path="" element={<Login />} />
             <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
             <Route
               path="/sign-up"
-              element={<Register onRegister={handleRegister} />}
+              element={<Register onRegistration={handleRegister} />}
             />
             <Route
               path="/"
@@ -285,11 +281,10 @@ console.log("isRegistration:", isRegistration);
                     onCardDelete={handlePictureDeleteClick}
                     onCardLike={handleCardLike}
                     loggedIn={loggedIn}
-                    email={email}
                     onSignOut={handleSignOut}
                   />
                 ) : (
-                  <Navigate to="/sign-in" replace={true} />
+                  <navigater to="/sign-in" replace={true} />
                 )
               }
             />
@@ -328,7 +323,9 @@ console.log("isRegistration:", isRegistration);
           <InfoTooltip
             isOpen={isInfoTooltipOpen}
             onClose={closeAllPopups}
-            isRegistration={isRegistration}
+            onRegistration={handleRegister}
+            onSignOut={handleSignOut}
+            isStatus={isRegistrationStatus} // Передача статуса регистрации
           />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />

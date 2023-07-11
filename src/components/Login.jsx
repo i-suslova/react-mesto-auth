@@ -1,17 +1,14 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Register from "./Register";
 
 function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    if (props.loggedIn) {
-      navigate("/");
-    }
-  }, [props.loggedIn, navigate]);
+ 
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -26,6 +23,11 @@ function Login(props) {
   function handlePasswordChange(e) {
     setPassword(e.target.value);
   }
+
+  if (props.loggedIn) {
+    return <Link to="/" />;
+  }
+  
   return (
     <div className="auth auth__login">
       <h2 className="auth__title">Вход</h2>
@@ -51,7 +53,11 @@ function Login(props) {
           required
         />
         {/* <span className="auth__form-error">{errors.password}</span> */}
-        <button className="auth__form-button" type="submit">
+        <button
+          className="auth__form-button"
+          type="submit"
+          onClick={handleSubmit}
+        >
           Войти
         </button>
       </form>

@@ -7,35 +7,25 @@ function InfoTooltip(props) {
     return null;
   }
 
+  let iconImage;
+  let message;
+  if (props.isStatus) {
+    iconImage = iconConsent;
+    message = "Вы успешно зарегистрировались!";
+  } else {
+    iconImage = iconRefusal;
+    message = "Что-то пошло не так! Попробуйте ещё раз.";
+  }
+
   return (
     <PopupWithForm
       isOpen={props.isOpen}
       onClose={props.onClose}
       showButton={false}
+      isStatus={props.isStatus}
     >
-      {props.isRegistration ? (
-        <>
-          <img
-            src={iconConsent}
-            alt="Регистрация прошла успешно"
-            className="popup__icon"
-          />
-          <h3 className="popup__result-title">
-            Вы успешно зарегистрировались!
-          </h3>
-        </>
-      ) : (
-        <>
-          <img
-            src={iconRefusal}
-            alt="Ошибка регистрации"
-            className="popup__icon"
-          />
-          <h3 className="popup__result-title">
-            Что-то пошло не так! Попробуйте ещё раз.
-          </h3>
-        </>
-      )}
+      <img src={iconImage} alt={message} className="popup__icon" />
+      <h3 className="popup__result-title">{message}</h3>
     </PopupWithForm>
   );
 }
