@@ -3,7 +3,7 @@ class ApiAuth {
     this.baseUrl = baseUrl;
     this.headers = headers;
   }
-
+ 
   // проверяем ответ сервера на корректность
   _correctServerResponse(res) {
     return res.ok ? res.json() : Promise.reject(`Ошибка ${res.status}`);
@@ -48,11 +48,14 @@ class ApiAuth {
   }
 }
 
-const apiAuth = new ApiAuth({
-  baseUrl: "https://auth.nomoreparties.co",
+const BASE_URL = "https://auth.nomoreparties.co"
+
+export const apiAuth = new ApiAuth({
+ // BASE_URL: "https://auth.nomoreparties.co",
+  baseUrl: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-export default apiAuth;
+export default ApiAuth;

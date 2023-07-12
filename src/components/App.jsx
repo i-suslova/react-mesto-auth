@@ -54,6 +54,28 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   React.useEffect(() => {
+    const checkToken = async () => {
+      if (!localStorage.getItem("JWT")){
+        navigate("/sign-in"); 
+        return;
+      }
+
+      try {
+        const res = await apiAuth.getToken(localStorage.getItem("JWT"));
+        if (res.data) {
+          setEmail(res.data.email);
+          setLoggedIn(true);
+          navigate("/sign-up");
+        }
+      } catch (err) {
+        setLoggedIn(false);
+        console.log(err);
+      }
+    };
+    checkToken();
+  }, []);
+
+  React.useEffect(() => {
     if (!loggedIn) return;
     const getAllData = async () => {
       try {
@@ -67,24 +89,6 @@ function App() {
 
     getAllData();
   }, [loggedIn]);
-
-  React.useEffect(() => {
-    const checkToken = async () => {
-      if (!localStorage.getItem("JWT")) return;
-
-      try {
-        const res = await apiAuth.getToken(localStorage.getItem("JWT"));
-        if (res.data) {
-          setEmail(res.data.email);
-          setLoggedIn(true);
-        }
-      } catch (err) {
-        setLoggedIn(false);
-        console.log(err);
-      }
-    };
-    checkToken();
-  }, []);
 
   const handleRegister = (email, password) => {
     apiAuth
