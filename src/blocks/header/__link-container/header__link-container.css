@@ -8,8 +8,13 @@
 
 @media screen and (max-width: 768px) {
   .header__link-container {
-    max-width: 320px;
+    position: absolute;
+    align-items: center;
+    top: 42px;
+    left: 0;
+    width: 100%;
+    align-items: center;
+    margin: 0;
     flex-direction: column;
-    width: 142px;
   }
 }

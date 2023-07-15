@@ -14,7 +14,6 @@ function PopupWithForm(props) {
           aria-label="закрыть"
           onClick={props.onClose}
         ></button>
-        <h2 className="popup__title">{props.title}</h2>
 
         <form
           className="popup__form"
@@ -22,8 +21,10 @@ function PopupWithForm(props) {
           method="post"
           onSubmit={props.onSubmit}
         >
+          {props.showTitle && <h2 className="popup__title">{props.title}</h2>}
+
           {props.children}
-       {props.showButton && ( 
+          {props.showButton && (
             <button
               type="submit"
               className="popup__button"

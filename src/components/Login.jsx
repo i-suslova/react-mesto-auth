@@ -1,33 +1,32 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Register from "./Register";
+import { useNavigate } from "react-router-dom";
 
 function Login(props) {
-  const [email, setEmail] = useState("");
+  const [email, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
- 
+  React.useEffect(() => {
+    if (props.loggedIn) {
+      navigate("/");
+    }
+  }, [props.loggedIn, navigate]);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    if (id === "Email") {
+      setUserEmail(value);
+    } else if (id === "Password") {
+      setPassword(value);
+    }
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
     props.onLogin(email, password);
   }
 
-  //обновляем состояние email
-  function handleEmailChange(e) {
-    setEmail(e.target.value);
-  }
-  //обновляем состояние пароля
-  function handlePasswordChange(e) {
-    setPassword(e.target.value);
-  }
-
-  if (props.loggedIn) {
-    return <Link to="/" />;
-  }
-  
   return (
     <div className="auth auth__login">
       <h2 className="auth__title">Вход</h2>
@@ -38,10 +37,9 @@ function Login(props) {
           placeholder="Email"
           id="Email"
           value={email}
-          onChange={handleEmailChange}
+          onChange={handleChange}
           required
         />
-        {/* <span className="auth__form-error">{errors.email}</span> */}
         <input
           className="auth__form-input"
           type="password"
@@ -49,10 +47,9 @@ function Login(props) {
           id="Password"
           placeholder="Пароль"
           value={password}
-          onChange={handlePasswordChange}
+          onChange={handleChange}
           required
         />
-        {/* <span className="auth__form-error">{errors.password}</span> */}
         <button
           className="auth__form-button"
           type="submit"

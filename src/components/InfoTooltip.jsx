@@ -22,7 +22,7 @@ function InfoTooltip(props) {
       isOpen={props.isOpen}
       onClose={props.onClose}
       showButton={false}
-      isStatus={props.isStatus}
+      showTitle={false}
     >
       <img src={iconImage} alt={message} className="popup__icon" />
       <h3 className="popup__result-title">{message}</h3>

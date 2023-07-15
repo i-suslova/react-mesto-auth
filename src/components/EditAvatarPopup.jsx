@@ -7,9 +7,7 @@ function EditAvatarPopup(props) {
 
   // очищаем поле ввода при открытии формы
   React.useEffect(() => {
-    
-      EditAvatarPopupRef.current.value = "";
-    
+    EditAvatarPopupRef.current.value = "";
   }, [props.isOpen]);
 
   function handleSubmit(e) {
@@ -28,8 +26,10 @@ function EditAvatarPopup(props) {
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
-     isLoading={props.isLoading}
+      isLoading={props.isLoading}
       loadingButtonText="Сохранение..."
+      showButton={true}
+      showTitle={true}
     >
       <input
         ref={EditAvatarPopupRef}

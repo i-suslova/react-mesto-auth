@@ -9,3 +9,10 @@
   text-decoration: none;
   text-align: center;
 }
+
+@media screen and (max-width: 768px) {
+  .header__link-emai {
+    margin: 0;
+    padding-bottom: 18px;
+  }
+}

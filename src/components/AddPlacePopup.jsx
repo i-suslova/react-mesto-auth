@@ -40,6 +40,8 @@ function AddPlacePopup(props) {
       onSubmit={handleSubmit}
       isLoading={props.isLoading}
       loadingButtonText="Сохранение..."
+      showButton={true}
+      showTitle={true}
     >
       <input
         type="text"

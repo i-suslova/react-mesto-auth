@@ -3,7 +3,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Card(props) {
   const currentUser = React.useContext(CurrentUserContext);
- 
+
   // Определяем, являемся ли мы владельцем текущей карточки
   //const isOwn = card.owner._id === currentUser._id;
   const isOwn = props.card.owner._id === currentUser._id;
@@ -59,7 +59,7 @@ function Card(props) {
           aria-label="нравится"
           onClick={handleLikeClick}
         ></button>
-       <span className="element__number-like">{props.card.likes.length}</span>
+        <span className="element__number-like">{props.card.likes.length}</span>
       </div>
     </article>
   );

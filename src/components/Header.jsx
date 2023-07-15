@@ -27,24 +27,22 @@ function Header(props) {
 
   return (
     <header className="header">
-      <img className="header__logo" src={logo} alt="логотип сайта место" />
-
-      <Link className="header__link" to={headerLink}>
-        {headerText}
-      </Link>
-
-      {props.loggedIn && (
-        <div className="header__link-container">
-          <div className="header__link-emai hover">
-            {props.email}
-            <Link
-              className="header__link-exit hover"
-              to="/sign-in"
-              onClick={props.onSignOut}
-            >
+      {props.loggedIn && pathName === "/" ? (
+        <div className="header__home">
+          <img className="header__logo" src={logo} alt="логотип сайта место" />
+          <div className="header__link-container">
+            <div className="header__link-emai">{props.email}</div>
+            <Link className="header__link-exit hover" onClick={props.onClick}>
               Выйти
             </Link>
           </div>
+        </div>
+      ) : (
+        <div className="header__auth">
+          <img className="header__logo" src={logo} alt="логотип сайта место" />
+          <Link className="header__link" to={headerLink}>
+            {headerText}
+          </Link>
         </div>
       )}
     </header>

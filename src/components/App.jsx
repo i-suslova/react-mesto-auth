@@ -21,8 +21,7 @@ import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const navigate = useNavigate();
-  //данные текущего пользователя
-  const [currentUser, setCurrentUser] = useState({});
+
   //определяем, открыт ли попап для редактирования профиля
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   //определяем, открыт ли попап для добавления нового места
@@ -32,9 +31,11 @@ function App() {
   //определяем, открыт ли попап для Подтверждения удаления карточки
   const [isPictureDeletePopupOpen, setIsPictureDeletePopupOpen] =
     useState(false);
-  //определяем, открыт ли попап для информации о регистрации
+  //определяем, открыт ли попап информации
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
+  //данные текущего пользователя
+  const [currentUser, setCurrentUser] = useState({});
   //сохраняем информации о карточке, которая должна быть удалена
   const [deletedCard, setDeletedCard] = useState(null);
   //сохраняем информацию о выбранной карточке
@@ -42,33 +43,29 @@ function App() {
   //сохраняем массив карточек
   const [cards, setCards] = useState([]);
   //сохраняем электронную почту
-  const [email, setEmail] = useState("");
-
+  const [userEmail, setUserEmail] = useState("");
   //отслеживанияем статус загрузки
   const [isLoading, setIsLoading] = useState(false);
   //отслеживанем успешное завершенияе регистрации
   const [isRegistrationStatus, setIsRegistrationStatus] = useState(false);
   //отслеживанем данные входа
-  const [isLoggedStatus, setIsLoggedStatus] = useState(false);
-  //
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   React.useEffect(() => {
     const checkToken = async () => {
-      if (!localStorage.getItem("JWT")){
-        navigate("/sign-in"); 
+      if (!localStorage.getItem("JWT")) {
         return;
       }
 
       try {
         const res = await apiAuth.getToken(localStorage.getItem("JWT"));
         if (res.data) {
-          setEmail(res.data.email);
-          setLoggedIn(true);
-          navigate("/sign-up");
+          setUserEmail(res.data.email);
+          setIsLoggedIn(true);
+          navigate("/"); 
         }
       } catch (err) {
-        setLoggedIn(false);
+        setIsLoggedIn(false);
         console.log(err);
       }
     };
@@ -76,7 +73,7 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    if (!loggedIn) return;
+    if (!isLoggedIn) return;
     const getAllData = async () => {
       try {
         const data = await api.getAllNeedData();
@@ -88,13 +85,13 @@ function App() {
     };
 
     getAllData();
-  }, [loggedIn]);
+  }, [isLoggedIn]);
 
   const handleRegister = (email, password) => {
     apiAuth
       .signup({ email, password })
       .then((res) => {
-        setEmail(res.data.email);
+        setUserEmail(res.data.email);
         setIsRegistrationStatus(true);
         setIsInfoTooltipOpen(true);
         navigate("/sign-in");
@@ -110,13 +107,14 @@ function App() {
     apiAuth
       .signin({ email, password })
       .then((res) => {
+        setIsLoggedIn(true);
         localStorage.setItem("JWT", res.token);
-        setIsLoggedStatus(true);
-        setLoggedIn(true);
         navigate("/");
       })
       .catch((error) => {
         console.error(error);
+
+        setIsRegistrationStatus(false);
         setIsInfoTooltipOpen(true);
       });
   };
@@ -131,15 +129,10 @@ function App() {
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
   };
-
   const handlePictureDeleteClick = (card) => {
     setDeletedCard(card);
     setIsPictureDeletePopupOpen(true);
   };
-
-  // const handlInfoTooltipClick = () => {
-  //   setIsInfoTooltipOpen(true);
-  // };
 
   //обработчик закрытия всех попапов
   const closeAllPopups = () => {
@@ -254,18 +247,23 @@ function App() {
   //удаляем JWT токен из локального хранилища браузера
   function handleSignOut() {
     localStorage.removeItem("JWT");
-    setLoggedIn(false);
-    setEmail("");
+    setIsLoggedIn(false);
+    setUserEmail("");
+
+    navigate("/sign-in");
   }
 
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
-          <Header />
+          <Header
+            loggedIn={isLoggedIn}
+            email={userEmail}
+            onClick={handleSignOut}
+          />
 
           <Routes>
-          <Route path="" element={<Login />} />
             <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
             <Route
               path="/sign-up"
@@ -274,22 +272,17 @@ function App() {
             <Route
               path="/"
               element={
-                loggedIn ? (
-                  <ProtectedRoute
-                    element={Main}
-                    cards={cards}
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onEditAvatar={handleEditAvatarClick}
-                    onCardClick={handleCardClick}
-                    onCardDelete={handlePictureDeleteClick}
-                    onCardLike={handleCardLike}
-                    loggedIn={loggedIn}
-                    onSignOut={handleSignOut}
-                  />
-                ) : (
-                  <navigater to="/sign-in" replace={true} />
-                )
+                <ProtectedRoute
+                  element={Main}
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardDelete={handlePictureDeleteClick}
+                  onCardLike={handleCardLike}
+                  loggedIn={isLoggedIn}
+                />
               }
             />
           </Routes>
@@ -328,8 +321,7 @@ function App() {
             isOpen={isInfoTooltipOpen}
             onClose={closeAllPopups}
             onRegistration={handleRegister}
-            onSignOut={handleSignOut}
-            isStatus={isRegistrationStatus} // Передача статуса регистрации
+            isStatus={isRegistrationStatus}
           />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
