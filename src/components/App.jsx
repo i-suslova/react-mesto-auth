@@ -70,7 +70,7 @@ function App() {
       }
     };
     checkToken();
-  }, []);
+  }, [navigate]);
 
   React.useEffect(() => {
     if (!isLoggedIn) return;
