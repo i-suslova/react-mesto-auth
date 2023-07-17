@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate} from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -285,6 +285,7 @@ function App() {
                 />
               }
             />
+           <Route path="*" element={<Navigate to="/sign-in" replace />} />
           </Routes>
 
           <Footer />
