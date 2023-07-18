@@ -3,18 +3,18 @@ import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup(props) {
   //записываем объект, возвращаемый хуком, в переменную
-  const EditAvatarPopupRef = React.useRef();
+  const editAvatarPopupRef = React.useRef();
 
   // очищаем поле ввода при открытии формы
   React.useEffect(() => {
-    EditAvatarPopupRef.current.value = "";
+    editAvatarPopupRef.current.value = "";
   }, [props.isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
 
     props.onUpdateAvatar({
-      avatar: EditAvatarPopupRef.current.value,
+      avatar: editAvatarPopupRef.current.value,
     });
   }
 
@@ -32,7 +32,7 @@ function EditAvatarPopup(props) {
       showTitle={true}
     >
       <input
-        ref={EditAvatarPopupRef}
+        ref={editAvatarPopupRef}
         type="url"
         name="avatar"
         className="popup__input"
