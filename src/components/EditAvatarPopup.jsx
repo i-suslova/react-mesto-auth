@@ -28,8 +28,6 @@ function EditAvatarPopup(props) {
       onSubmit={handleSubmit}
       isLoading={props.isLoading}
       loadingButtonText="Сохранение..."
-      showButton={true}
-      showTitle={true}
     >
       <input
         ref={editAvatarPopupRef}

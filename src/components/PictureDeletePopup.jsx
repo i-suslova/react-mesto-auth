@@ -17,8 +17,6 @@ function PictureDeletePopup(props) {
       onSubmit={handleSubmit}
       isLoading={props.isLoading}
       loadingButtonText="Удаляем..."
-      showButton={true}
-      showTitle={true}
     ></PopupWithForm>
   );
 }

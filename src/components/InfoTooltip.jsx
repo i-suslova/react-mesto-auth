@@ -1,6 +1,5 @@
 import iconConsent from "../images/iconConsent.svg";
 import iconRefusal from "../images/iconRefusal.svg";
-import PopupWithForm from "./PopupWithForm";
 
 function InfoTooltip(props) {
   if (!props.isOpen) {
@@ -18,15 +17,25 @@ function InfoTooltip(props) {
   }
 
   return (
-    <PopupWithForm
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      showButton={false}
-      showTitle={false}
+    <div
+      className={`popup popup_type_${props.name} ${
+        props.isOpen ? "popup_opened" : ""
+      }`}
     >
-      <img src={iconImage} alt={message} className="popup__icon" />
-      <h3 className="popup__result-title">{message}</h3>
-    </PopupWithForm>
+      <div className="popup__container">
+        <button
+          type="button"
+          className={`popup__button-close popup__button-close_${props.name} hover`}
+          aria-label="закрыть"
+          onClick={props.onClose}
+        ></button>
+
+        <div>
+          <img src={iconImage} alt={message} className="popup__icon" />
+          <h3 className="popup__result-title">{message}</h3>
+        </div>
+      </div>
+    </div>
   );
 }
 

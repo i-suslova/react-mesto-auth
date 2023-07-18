@@ -21,18 +21,17 @@ function PopupWithForm(props) {
           method="post"
           onSubmit={props.onSubmit}
         >
-          {props.showTitle && <h2 className="popup__title">{props.title}</h2>}
+          <h2 className="popup__title">{props.title}</h2>
 
           {props.children}
-          {props.showButton && (
-            <button
-              type="submit"
-              className="popup__button"
-              disabled={props.isLoading}
-            >
-              {props.isLoading ? props.loadingButtonText : props.buttonText}
-            </button>
-          )}
+
+          <button
+            type="submit"
+            className="popup__button"
+            disabled={props.isLoading}
+          >
+            {props.isLoading ? props.loadingButtonText : props.buttonText}
+          </button>
         </form>
       </div>
     </div>
