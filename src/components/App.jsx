@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import ProtectedRoute from "./ProtectedRoute";
@@ -50,6 +50,11 @@ function App() {
   const [isRegistrationStatus, setIsRegistrationStatus] = useState(false);
   //отслеживанем данные входа
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isOpen =
+    isEditAvatarPopupOpen ||
+    isEditProfilePopupOpen ||
+    isAddPlacePopupOpen ||
+    selectedCard;
 
   React.useEffect(() => {
     const checkToken = async () => {
@@ -253,6 +258,21 @@ function App() {
 
     navigate("/sign-in");
   }
+
+  useEffect(() => {
+    function closeByEscape(evt) {
+      if (evt.key === "Escape") {
+        closeAllPopups();
+      }
+    }
+    if (isOpen) {
+      // навешиваем только при открытии
+      document.addEventListener("keydown", closeByEscape);
+      return () => {
+        document.removeEventListener("keydown", closeByEscape);
+      };
+    }
+  }, [isOpen]);
 
   return (
     <div className="App">
