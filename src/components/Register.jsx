@@ -1,11 +1,13 @@
 import React from "react";
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "../hooks/useForm.js";
 
 function Register(props) {
   const navigate = useNavigate();
-  const [email, setUserEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { values, handleChange } = useForm({
+    email: "",
+    password: "",
+  });
 
   React.useEffect(() => {
     if (props.loggedIn) {
@@ -13,20 +15,9 @@ function Register(props) {
     }
   }, [props.loggedIn, navigate]);
 
-  // обновляем состояние email и password,
-  //и передаём их в props.onRegister при вызове
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    if (id === "Email") {
-      setUserEmail(value);
-    } else if (id === "Password") {
-      setPassword(value);
-    }
-  };
-
   function handleSubmit(e) {
     e.preventDefault();
-    props.onRegistration(email, password);
+    props.onRegistration(values.email, values.password);
   }
 
   return (
@@ -38,25 +29,21 @@ function Register(props) {
           className="auth__form-input"
           type="email"
           placeholder="Email"
-          id="Email"
-          value={email || ""}
+          name="email"
+          value={values.email || ""}
           onChange={handleChange}
           required
         />
         <input
           className="auth__form-input"
           type="password"
-          // minLength="3"
-          id="Password"
+          name="password"
           placeholder="Пароль"
-          value={password || ""}
+          value={values.password || ""}
           onChange={handleChange}
           required
         />
-        <button
-          className="auth__form-button"
-          type="submit"
-        >
+        <button className="auth__form-button" type="submit">
           Зарегистрироваться
         </button>
 

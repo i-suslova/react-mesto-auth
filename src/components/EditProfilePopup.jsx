@@ -1,40 +1,35 @@
 import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
+import { useForm } from "../hooks/useForm.js";
 
 function EditProfilePopup(props) {
   // Подписка на контекст для хранения данных о текущем пользователе
   const currentUser = React.useContext(CurrentUserContext);
 
-  const [name, setName] = React.useState("");
-  const [description, setDescription] = React.useState("");
+  const { values, handleChange, setValues } = useForm({
+    name: "",
+    description: "",
+  });
 
   // После загрузки текущего пользователя из API
   // его данные будут использованы в управляемых компонентах.
   React.useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser, props.isOpen]);
+    setValues({
+      name: currentUser.name,
+      description: currentUser.about,
+    });
+  }, [currentUser, props.isOpen, setValues]);
 
   //функция-обработчик отправки формы
   function handleSubmit(e) {
     e.preventDefault();
     // Передаём значения управляемых компонентов во внешний обработчик
     props.onUpdateUser({
-      name,
-      about: description,
+      name: values.name,
+      about: values.description,
     });
   }
-
-  //функция-обработчик изменения значений поля имени
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  //функция-обработчик изменения значений поля описания профиля
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
 
   return (
     <PopupWithForm
@@ -55,8 +50,8 @@ function EditProfilePopup(props) {
         minLength="2"
         maxLength="40"
         required
-        value={name || ""}
-        onChange={handleNameChange}
+        value={values.name || ""}
+        onChange={handleChange}
       />
       <span className="popup__error input-name-error"></span>
       <input
@@ -67,8 +62,8 @@ function EditProfilePopup(props) {
         minLength="2"
         maxLength="200"
         required
-        value={description || ""}
-        onChange={handleDescriptionChange}
+        value={values.description || ""}
+        onChange={handleChange}
       />
       <span className="popup__error input-job-error"></span>
     </PopupWithForm>

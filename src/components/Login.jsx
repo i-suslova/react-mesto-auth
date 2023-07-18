@@ -1,11 +1,13 @@
 import React from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "../hooks/useForm.js";
 
 function Login(props) {
-  const [email, setUserEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { values, handleChange } = useForm({
+    email: "",
+    password: "",
+  });
 
   React.useEffect(() => {
     if (props.loggedIn) {
@@ -13,18 +15,9 @@ function Login(props) {
     }
   }, [props.loggedIn, navigate]);
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    if (id === "Email") {
-      setUserEmail(value);
-    } else if (id === "Password") {
-      setPassword(value);
-    }
-  };
-
   function handleSubmit(e) {
     e.preventDefault();
-    props.onLogin(email, password);
+    props.onLogin(values.email, values.password);
   }
 
   return (
@@ -35,8 +28,8 @@ function Login(props) {
           className="auth__form-input"
           type="email"
           placeholder="Email"
-          id="Email"
-          value={email}
+          name="email"
+          value={values.email}
           onChange={handleChange}
           required
         />
@@ -44,16 +37,13 @@ function Login(props) {
           className="auth__form-input"
           type="password"
           minLength="4"
-          id="Password"
+          name="password"
           placeholder="Пароль"
-          value={password}
+          value={values.password}
           onChange={handleChange}
           required
         />
-        <button
-          className="auth__form-button"
-          type="submit"
-        >
+        <button className="auth__form-button" type="submit">
           Войти
         </button>
       </form>

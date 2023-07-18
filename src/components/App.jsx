@@ -100,6 +100,7 @@ function App() {
       })
       .finally(() => {
         setIsInfoTooltipOpen(true);
+        navigate("/sign-in");
       });
   };
 
