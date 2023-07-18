@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Routes, Route, useNavigate, Navigate} from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -62,7 +62,7 @@ function App() {
         if (res.data) {
           setUserEmail(res.data.email);
           setIsLoggedIn(true);
-          navigate("/"); 
+          navigate("/");
         }
       } catch (err) {
         setIsLoggedIn(false);
@@ -93,12 +93,12 @@ function App() {
       .then((res) => {
         setUserEmail(res.data.email);
         setIsRegistrationStatus(true);
-        setIsInfoTooltipOpen(true);
-        navigate("/sign-in");
       })
       .catch((error) => {
         console.error(error);
         setIsRegistrationStatus(false);
+      })
+      .finally(() => {
         setIsInfoTooltipOpen(true);
       });
   };
@@ -285,7 +285,7 @@ function App() {
                 />
               }
             />
-           <Route path="*" element={<Navigate to="/sign-in" replace />} />
+            <Route path="*" element={<Navigate to="/sign-in" replace />} />
           </Routes>
 
           <Footer />
