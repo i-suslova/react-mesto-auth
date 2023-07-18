@@ -53,7 +53,6 @@ function Login(props) {
         <button
           className="auth__form-button"
           type="submit"
-          onClick={handleSubmit}
         >
           Войти
         </button>
