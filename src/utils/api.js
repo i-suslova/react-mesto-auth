@@ -13,20 +13,25 @@ class Api {
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
+  // универсальный метод для отправки запроса
+  _request(endpoint, options) {
+      return fetch(`${this._baseUrl}/${endpoint}`, options).then(
+      this._correctServerResponse
+    );
+  }
+
   // загрузка информации о пользователе с сервера
-  async _getUserInfo() {
-    const response = await fetch(`${this._baseUrl}/users/me`, {
+  _getUserInfo() {
+    return this._request("users/me", {
       headers: this._headers,
     });
-    return this._correctServerResponse(response);
   }
 
   // получаем список всех карточек в виде массива (GET)
-  async _getInitialCards() {
-    const response = await fetch(`${this._baseUrl}/cards`, {
+  _getInitialCards() {
+    return this._request("cards", {
       headers: this._headers,
     });
-    return this._correctServerResponse(response);
   }
 
   // объединяем 2 функцииа
@@ -45,8 +50,8 @@ class Api {
   }
 
   // отправка данных для профиля (PATCH)
-  async getUserId(data) {
-    const response = await fetch(`${this._baseUrl}/users/me`, {
+  getUserId(data) {
+    return this._request("users/me", {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
@@ -54,33 +59,30 @@ class Api {
         about: data.about,
       }),
     });
-    return this._correctServerResponse(response);
   }
 
   // отправка данных для изменения аватара (PATCH)
-  async editAvatar(data) {
-    const response = await fetch(`${this._baseUrl}/users/me/avatar`, {
+  editAvatar(data) {
+    return this._request("users/me/avatar", {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
         avatar: data.avatar,
       }),
     });
-    return this._correctServerResponse(response);
   }
 
   // отправка данных по удалению своей карточки (DELETE)
-  async deletePersonalCard(cardId) {
-    const response = await fetch(`${this._baseUrl}/cards/${cardId}`, {
+  deletePersonalCard(cardId) {
+    return this._request(`cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
     });
-    return this._correctServerResponse(response);
   }
 
   // добавить на сервер новую карточку(POST)
-  async addCard(data) {
-    const response = await fetch(`${this._baseUrl}/cards`, {
+  addCard(data) {
+    return this._request("cards", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({
@@ -88,25 +90,22 @@ class Api {
         link: data.link,
       }),
     });
-    return this._correctServerResponse(response);
   }
 
   // поставить лайк (PUT)
-  async addLike(cardId) {
-    const response = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+  addLike(cardId) {
+    return this._request(`cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
     });
-    return this._correctServerResponse(response);
   }
 
   // удалить лайк (DELETE)
-  async deleteLike(cardId) {
-    const response = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+  deleteLike(cardId) {
+    return this._request(`cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
     });
-    return this._correctServerResponse(response);
   }
 }
 

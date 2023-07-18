@@ -9,9 +9,16 @@ class ApiAuth {
     return res.ok ? res.json() : Promise.reject(`Ошибка ${res.status}`);
   }
 
+  // универсальный метод для отправки запроса
+  _request(endpoint, options) {
+    return fetch(`${this.baseUrl}/${endpoint}`, options).then(
+      this._correctServerResponse
+    );
+  }
+
   // запрос для регистрации
-  async signup({ email, password }) {
-    const response = await fetch(`${this.baseUrl}/signup`, {
+  signup({ email, password }) {
+    return this._request("signup", {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify({
@@ -19,12 +26,11 @@ class ApiAuth {
         email: email,
       }),
     });
-    return this._correctServerResponse(response);
   }
 
   //запрос для авторизации
-  async signin({ email, password }) {
-    const response = await fetch(`${this.baseUrl}/signin`, {
+  signin({ email, password }) {
+    return this._request("signin", {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify({
@@ -32,19 +38,17 @@ class ApiAuth {
         email: email,
       }),
     });
-    return this._correctServerResponse(response);
   }
 
   //запрос для проверки валидности токена и
   //получения email для вставки в шапку сайта
-  async getToken(token) {
-    const response = await fetch(`${this.baseUrl}/users/me`, {
+  getToken(token) {
+    return this._request("users/me", {
       headers: {
         ...this.headers,
         Authorization: `Bearer ${token}`,
       },
     });
-    return this._correctServerResponse(response);
   }
 }
 
