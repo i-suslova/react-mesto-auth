@@ -15,7 +15,7 @@ class Api {
 
   // универсальный метод для отправки запроса
   _request(endpoint, options) {
-      return fetch(`${this._baseUrl}/${endpoint}`, options).then(
+    return fetch(`${this._baseUrl}/${endpoint}`, options).then(
       this._correctServerResponse
     );
   }
