@@ -39,7 +39,6 @@ function Card(props) {
         src={props.card.link}
         alt={`${props.card.name}.`}
         className="element__photo"
-        style={{ backgroundImage: `url(${props.card.link})` }}
         onClick={handleClick}
       />
       {isOwn && (
