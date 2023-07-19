@@ -45,7 +45,7 @@ function EditProfilePopup(props) {
       <input
         type="text"
         className="popup__input"
-        id="input-name"
+        name="name"
         placeholder="Имя"
         minLength="2"
         maxLength="40"
@@ -57,7 +57,7 @@ function EditProfilePopup(props) {
       <input
         type="text"
         className="popup__input"
-        id="input-job"
+        name="description"
         placeholder="О себе"
         minLength="2"
         maxLength="200"
