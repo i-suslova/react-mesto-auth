@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import ProtectedRoute from "./ProtectedRoute";
@@ -50,11 +50,6 @@ function App() {
   const [isRegistrationStatus, setIsRegistrationStatus] = useState(false);
   //отслеживанем данные входа
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isOpen =
-    isEditAvatarPopupOpen ||
-    isEditProfilePopupOpen ||
-    isAddPlacePopupOpen ||
-    selectedCard;
 
   React.useEffect(() => {
     const checkToken = async () => {
@@ -156,21 +151,13 @@ function App() {
     setSelectedCard(card);
   };
 
-  const handleCardDelete = (card) => {
-    setIsLoading(true);
-    api
-      .deletePersonalCard(card._id)
-      .then(() => {
+  function handleCardDelete(card) {
+    handleSubmit(() => {
+      return api.deletePersonalCard(card._id).then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
-        closeAllPopups();
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
-  };
+    });
+  }
 
   const handleCardLike = (card) => {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -200,54 +187,30 @@ function App() {
     }
   };
 
-  // отправляем данныхе для изменения данных профиля
+  // отправляем данные для изменения данных профиля
   function handleUpdateUser(user) {
-    setIsLoading(true);
-    api
-      .getUserId(user)
-      .then((data) => {
-        setCurrentUser(data); // Обновляем стейт currentUser
-        closeAllPopups(); // Закрываем все модальные окна
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
+    handleSubmit(() => {
+      return api.getUserId(user).then((data) => {
+        setCurrentUser(data);
       });
+    });
   }
 
   function handleUpdateAvatar(data) {
-    setIsLoading(true);
-    api
-      .editAvatar(data)
-      .then((data) => {
-        setCurrentUser(data); // Обновляем стейт currentUser
-        closeAllPopups(); // Закрываем все модальные окна
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
+    handleSubmit(() => {
+      return api.editAvatar(data).then((data) => {
+        setCurrentUser(data);
       });
+    });
   }
 
   function handleAddPlaceSubmit(data) {
-    setIsLoading(true);
-    api
-      .addCard(data)
-      .then((data) => {
+    handleSubmit(() => {
+      return api.addCard(data).then((data) => {
         const newCard = data;
         setCards([newCard, ...cards]);
-        closeAllPopups(); // Закрываем все модальные окна
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
+    });
   }
 
   //удаляем JWT токен из локального хранилища браузера
@@ -259,20 +222,19 @@ function App() {
     navigate("/sign-in");
   }
 
-  useEffect(() => {
-    function closeByEscape(evt) {
-      if (evt.key === "Escape") {
-        closeAllPopups();
-      }
-    }
-    if (isOpen) {
-      // навешиваем только при открытии
-      document.addEventListener("keydown", closeByEscape);
-      return () => {
-        document.removeEventListener("keydown", closeByEscape);
-      };
-    }
-  }, [isOpen]);
+  //универсальная функция, которая принимает функцию запроса
+  function handleSubmit(request) {
+    // изменяем текст кнопки до вызова запроса
+    setIsLoading(true);
+    request()
+      // закрывать попап нужно только в `then`
+      .then(closeAllPopups)
+      // в каждом запросе нужно ловить ошибку
+      // console.error обычно используется для логирования ошибок, если никакой другой обработки ошибки нет
+      .catch(console.error)
+      // в каждом запросе в `finally` нужно возвращать обратно начальный текст кнопки
+      .finally(() => setIsLoading(false));
+  }
 
   return (
     <div className="App">

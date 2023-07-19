@@ -6,8 +6,6 @@ function ProtectedRoute({ element: Component, ...props }) {
     <Component {...props} />
   ) : (
     <Navigate to="/sign-in" replace />
-
-    
   );
 }
 
